@@ -3,6 +3,8 @@ import java.util.Map;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.CharStreams;
+import java.util.Set;
+import java.util.HashSet;
 
 public class MyRefactor {
     private MySqlLexer lexer;
@@ -10,18 +12,23 @@ public class MyRefactor {
     private Map<String,String> tablas;
     private MyTreeVisitor visitor;
 
-    public MyRefactor(String sql, Map<String,String> tablas) throws ParseCancellationException{
+    public MyRefactor(String sql, Map<String,String> tablas) throws ParseCancellationException, TableNameException, TableAliasException{
         this.tablas=tablas;
 
         try{
             this.lexer=new MySqlLexer(CharStreams.fromString(sql));
             this.parser=new MySqlParser(new CommonTokenStream(this.lexer));
-            //this.checkTablas();
+            this.checkTablas();
         }
         catch(ParseCancellationException e){
             throw new ParseCancellationException();
         }
-
+        catch(TableNameException e){
+            throw new TableNameException(e.getMessage());
+        }
+        catch(TableAliasException e){
+            throw new TableAliasException(e.getMessage());
+        }
         this.visitor= new MyTreeVisitor(tablas);
     }
 
@@ -29,7 +36,19 @@ public class MyRefactor {
         return(this.visitor.visit(this.parser.selectStatement()));
     }
 
-    private void checkTablas() throws Exception{
-
+    private void checkTablas() throws TableNameException, TableAliasException{
+        Set<String> aliasSeen = new HashSet<String>();
+        for(String tabla: this.tablas.keySet()){
+            if(this.tablas.values().contains(tabla))
+                throw new TableNameException("Error: Alias "+tabla+" es el nombre de otra tabla");
+        }
+        for(String alias: this.tablas.values()){
+            if(aliasSeen.contains(alias))
+                throw new TableAliasException("Error: Alias "+alias+" se repite");
+            else
+                aliasSeen.add(alias);
+        }
+        
+        
     }
 }
