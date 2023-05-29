@@ -96,7 +96,7 @@ public class AppTest
 
     @Test
     public void shouldThrowTableAliasException(){
-        String sql="Select * from Customers as C";
+        String sql="Select * from Customers, Pedidos";
         tablas.put("Pedidos", "C");
         try{
             MyRefactor ref=new MyRefactor(sql, tablas);
@@ -109,4 +109,7 @@ public class AppTest
             System.out.println(e.getMessage());
         }
     }
+    
+    // hacer test para conflictos de alias en el sql y lista de tablas (agregar alias para una tabla que ya tiene en el query) 
+    //(Alias para una tabla que no tiene alias pero ya esta utilizado Pedidos as C en el query) 
 }
