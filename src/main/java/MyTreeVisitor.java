@@ -43,26 +43,30 @@ public class MyTreeVisitor extends MySqlParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitRoot(MySqlParser.RootContext ctx) {
-        return visitChildren(ctx);
-    }
-    
-
-    @Override
     public String visitFromClause(MySqlParser.FromClauseContext ctx) {
         MySqlParser.TableSourcesContext tableReferences = ctx.tableSources();
         MySqlParser.ExpressionContext where=ctx.whereExpr;
         String res="From ";
         for(int i=0; i< tableReferences.getChildCount(); i++){
-            String name = tableReferences.getChild(i).getText();
-            String alias= tablas.get(name);
-            if(alias!=null){
-                res+=name+ " as "+alias;
+          String name="";
+          if(tableReferences.getChild(i).getChildCount()>0){
+            if(tableReferences.getChild(i).getChild(0).getChildCount()>2){
+              name = tableReferences.getChild(i).getChild(0).getChild(0).getText();
             }
             else{
-                
-                res+=name+" ";
+              name = tableReferences.getChild(i).getText();
             }
+          }
+          else{
+            name = tableReferences.getChild(i).getText();
+          }
+          String alias= tablas.get(name);
+          if(alias!=null){
+            res+=name+ " as "+alias;
+          }
+          else{
+            res+=name+" ";
+          }
         }
         res+=" where ";
         res+=visitChildren(where.getRuleContext());

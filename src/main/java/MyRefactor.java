@@ -1,5 +1,4 @@
 import java.util.Map;
-
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.CharStreams;
@@ -11,13 +10,15 @@ public class MyRefactor {
     private MySqlParser parser;
     private Map<String,String> tablas;
     private MyTreeVisitor visitor;
+    private MyErrorVisitor err;
 
-    public MyRefactor(String sql, Map<String,String> tablas) throws ParseCancellationException, TableNameException, TableAliasException{
+    public MyRefactor(String sql, Map<String,String> tablas) throws ParseCancellationException, TableNameException, TableAliasException, SqlStringException{
         this.tablas=tablas;
 
         try{
             this.lexer=new MySqlLexer(CharStreams.fromString(sql));
             this.parser=new MySqlParser(new CommonTokenStream(this.lexer));
+            this.err=new MyErrorVisitor(tablas);
             this.checkTablas();
         }
         catch(ParseCancellationException e){
@@ -29,6 +30,9 @@ public class MyRefactor {
         catch(TableAliasException e){
             throw new TableAliasException(e.getMessage());
         }
+        catch(SqlStringException e){
+            throw new SqlStringException(e.getMessage());
+        }
         this.visitor= new MyTreeVisitor(tablas);
     }
 
@@ -36,7 +40,11 @@ public class MyRefactor {
         return(this.visitor.visit(this.parser.selectStatement()));
     }
 
-    private void checkTablas() throws TableNameException, TableAliasException{
+    private void checkTablas() throws TableNameException, TableAliasException, SqlStringException{ 
+        String error=this.err.visit(this.parser.selectStatement());
+        if(error!=null){
+          throw new SqlStringException(error);
+        }
         Set<String> aliasSeen = new HashSet<String>();
         for(String tabla: this.tablas.keySet()){
             if(this.tablas.values().contains(tabla))
