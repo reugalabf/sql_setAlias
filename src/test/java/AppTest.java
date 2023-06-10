@@ -117,14 +117,26 @@ public class AppTest
       try{
         MyRefactor ref=new MyRefactor(sql, tablas);
       }
-      catch(SqlStringException e){
+      catch(SqlStringException e){   
         exceptionRule.expect(SqlStringException.class);
       }
       catch(Exception e){
         System.out.println(e.getMessage());
       }  
-  }
-    
-    // hacer test para conflictos de alias en el sql y lista de tablas (agregar alias para una tabla que ya tiene en el query) 
-    //(Alias para una tabla que no tiene alias pero ya esta utilizado Pedidos as C en el query) 
+    }
+
+    @Test
+    public void SameAliasInStringAsAnotherTableName(){
+      String sql = "Select * from Customers, Pedidos as Customers";
+      try{
+        MyRefactor ref=new MyRefactor(sql, tablas);
+      }
+      catch(SqlStringException e){   
+        exceptionRule.expect(SqlStringException.class);
+      }
+      catch(Exception e){
+        System.out.println(e.getMessage());
+      }
+    }
 }
+

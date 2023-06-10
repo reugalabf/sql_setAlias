@@ -31,6 +31,7 @@ public class MyRefactor {
             throw new TableAliasException(e.getMessage());
         }
         catch(SqlStringException e){
+            System.out.println(e.getClass());
             throw new SqlStringException(e.getMessage());
         }
         this.visitor= new MyTreeVisitor(tablas);
