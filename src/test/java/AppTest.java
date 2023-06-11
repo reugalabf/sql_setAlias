@@ -112,31 +112,17 @@ public class AppTest
 
     @Test
 
-    public void sameAliasInStringAsAnotherTableAlias(){
+    public void sameAliasInStringAsAnotherTableAlias() throws Exception{
       String sql = "Select * from Customers, Pedidos as C";
-      try{
-        MyRefactor ref=new MyRefactor(sql, tablas);
-      }
-      catch(SqlStringException e){   
-        exceptionRule.expect(SqlStringException.class);
-      }
-      catch(Exception e){
-        System.out.println(e.getMessage());
-      }  
+      exceptionRule.expect(SqlStringException.class);
+      MyRefactor ref=new MyRefactor(sql, tablas); 
     }
 
     @Test
-    public void SameAliasInStringAsAnotherTableName(){
+    public void SameAliasInStringAsAnotherTableName() throws Exception{
       String sql = "Select * from Customers, Pedidos as Customers";
-      try{
-        MyRefactor ref=new MyRefactor(sql, tablas);
-      }
-      catch(SqlStringException e){   
-        exceptionRule.expect(SqlStringException.class);
-      }
-      catch(Exception e){
-        System.out.println(e.getMessage());
-      }
+      exceptionRule.expect(SqlStringException.class);
+      MyRefactor ref=new MyRefactor(sql, tablas);
     }
 }
 
