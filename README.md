@@ -1,6 +1,7 @@
 # Final_Objetos2
 
 Trabajo final para la materia Orientación de Objetos 2 en la Facultad de Informatica de la Universidad Nacional de La Plata. 
+
 Consigna otorgada por el profesor Federico Balaguer. 
 
 # Features
