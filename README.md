@@ -1,8 +1,6 @@
-# Final_Objetos2
+# SQL set Alias Refactoring
 
-Trabajo final para la materia Orientación de Objetos 2 en la Facultad de Informatica de la Universidad Nacional de La Plata. 
-
-Consigna otorgada por el profesor Federico Balaguer. 
+Este es un fork del repo: https://github.com/Sectusius/Final_Objetos2 de Ian Petraccaro Cantero
 
 # Features
 
@@ -56,11 +54,7 @@ Para desarrollar este proyecto se utilizó el lenguaje Java y Antlr4 para genera
     }
 ```
 Éste ejemplo, al igual que el anterior, levanta una excepción ya que la tabla Pedidos tiene como alias el nombre de otra tabla, con la diferencia de que esto ocurre en la propia consulta sql, y no en la lista de tablas.
-# Autores
-
-Ian Petraccaro Cantero, [@Sectusius](https://github.com/Sectusius)
-
-# Links
+# Repo Original
 
 -Link del repositorio: https://github.com/Sectusius/Final_Objetos2.
 
